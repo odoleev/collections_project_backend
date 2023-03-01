@@ -35,7 +35,7 @@ export class ItemsService {
       totalCount = items.length;
     } else {
       items = await this.itemsModel
-        .find({ creatorId: collectionId })
+        .find({ collectionId: collectionId })
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
@@ -65,23 +65,26 @@ export class ItemsService {
       .find({})
       .sort({ createdAt: -1 })
       .limit(5);
-    return items;
+    const totalCount = items.length;
+    return { items, totalCount };
   }
 
   async findItemsByTags(tags: string[]) {
     const items = await this.itemsModel.find({ tags: { $all: tags } });
-    return items;
+    const totalCount = items.length;
+    return { items, totalCount };
   }
 
   async createItem(dto: CreateItemDto) {
     const collection = await this.collectionsService.getCollectionById(
       dto.collectionId,
     );
-    await this.collectionsService.itemsInCollectionChange(dto.collectionId);
+    await this.collectionsService.itemsInCollectionPlus(dto.collectionId);
     const item = new this.itemsModel({
       ...dto,
       createdAt: new Date(),
       collectionName: collection.name,
+      creatorId: collection.creatorId,
     });
     return item.save();
   }
@@ -99,6 +102,8 @@ export class ItemsService {
   }
 
   async deleteItem(id: string) {
+    const item = await this.getItemById(id);
+    await this.collectionsService.itemsInCollectionMinus(item.collectionId);
     await this.itemsModel.deleteOne({ _id: id });
   }
 

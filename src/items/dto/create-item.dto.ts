@@ -116,8 +116,8 @@ export class CreateItemDto {
   })
   @Prop({ default: null })
   @IsOptional()
-  @IsDate()
-  readonly date1: Date;
+  @IsString()
+  readonly date1: string;
 
   @ApiProperty({
     example: '21.03.1999',
@@ -125,8 +125,8 @@ export class CreateItemDto {
   })
   @Prop({ default: null })
   @IsOptional()
-  @IsDate()
-  readonly date2: Date;
+  @IsString()
+  readonly date2: string;
 
   @ApiProperty({
     example: '21.03.1999',
@@ -134,8 +134,8 @@ export class CreateItemDto {
   })
   @Prop({ default: null })
   @IsOptional()
-  @IsDate()
-  readonly date3: Date;
+  @IsString()
+  readonly date3: string;
 
   @ApiProperty({
     example: 'true',

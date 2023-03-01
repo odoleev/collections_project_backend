@@ -12,12 +12,13 @@ import {
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { Public } from '../common/decorators';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { Items } from '../schemas/items.schema';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 
+@ApiTags('Items')
 @Controller('items')
 export class ItemsController {
   constructor(private itemsService: ItemsService) {}
@@ -61,12 +62,11 @@ export class ItemsController {
     return await this.itemsService.getLastAddedItems();
   }
 
-
   @Post()
   @ApiOperation({ summary: 'Create item' })
   @ApiResponse({ status: 200, type: Items })
   @HttpCode(HttpStatus.OK)
-  async createCollection(@Body() dto: CreateItemDto) {
+  async createItem(@Body() dto: CreateItemDto) {
     return await this.itemsService.createItem(dto);
   }
 
@@ -93,7 +93,7 @@ export class ItemsController {
   @ApiOperation({ summary: 'Edit item' })
   @ApiResponse({ status: 200, type: Items })
   @HttpCode(HttpStatus.OK)
-  async editCollection(@Param('id') id: string, @Body() dto: UpdateItemDto) {
+  async editItem(@Param('id') id: string, @Body() dto: UpdateItemDto) {
     return await this.itemsService.updateItem(dto, id);
   }
 
@@ -101,7 +101,7 @@ export class ItemsController {
   @ApiOperation({ summary: 'Delete collection' })
   @ApiResponse({ status: 200 })
   @HttpCode(HttpStatus.OK)
-  async deleteCollection(@Param('id') id: string) {
+  async deleteItem(@Param('id') id: string) {
     return await this.itemsService.deleteItem(id);
   }
 }

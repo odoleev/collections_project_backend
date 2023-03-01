@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from '../schemas/users.schema';
-import { Roles } from '../common/decorators';
+import { Public, Roles } from '../common/decorators';
 import { RolesEnum } from '../common/types';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 
@@ -27,6 +27,16 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async getAllUsers(@Query() query: ExpressQuery) {
     return await this.usersService.getAllUsers(query);
+  }
+
+  @Get(':id')
+  @Public()
+  @ApiOperation({ summary: 'Get user' })
+  @ApiResponse({ status: 200, type: User })
+  @Roles(RolesEnum.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  async getUserById(@Param('id') id: string) {
+    return await this.usersService.getUserById(id);
   }
 
   @Patch('block/:id')

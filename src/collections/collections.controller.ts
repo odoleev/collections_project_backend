@@ -34,7 +34,7 @@ export class CollectionsController {
 
   @Get('user-collections/:id')
   @Public()
-  @ApiOperation({ summary: 'Get collection by id' })
+  @ApiOperation({ summary: 'Get collections of user' })
   @ApiResponse({ status: 200, type: [Collection] })
   @HttpCode(HttpStatus.OK)
   async getUserCollections(
@@ -46,7 +46,7 @@ export class CollectionsController {
 
   @Get('')
   @Public()
-  @ApiOperation({ summary: 'Get collection by id' })
+  @ApiOperation({ summary: 'Get collection with most items' })
   @ApiResponse({ status: 200, type: [Collection] })
   @HttpCode(HttpStatus.OK)
   async getMostItemsCollections() {

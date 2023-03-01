@@ -22,6 +22,10 @@ export class Items {
   @Prop({ required: true })
   collectionId: string;
 
+  @ApiProperty({ example: 'string', description: `Creator id` })
+  @Prop({ required: true })
+  creatorId: string;
+
   @ApiProperty({ example: 'string', description: `Collection's name` })
   @Prop({ required: true })
   collectionName: string;
@@ -94,21 +98,21 @@ export class Items {
     description: 'Optional date field of item',
   })
   @Prop({ default: null })
-  date1: Date;
+  date1: string;
 
   @ApiProperty({
     example: '21.03.1999',
     description: 'Optional date field of item',
   })
   @Prop({ default: null })
-  date2: Date;
+  date2: string;
 
   @ApiProperty({
     example: '21.03.1999',
     description: 'Optional date field of item',
   })
   @Prop({ default: null })
-  date3: Date;
+  date3: string;
 
   @ApiProperty({
     example: 'true',

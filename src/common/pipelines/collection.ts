@@ -8,7 +8,7 @@ export const collectionsPipeline = (search: string, userId: string) => {
             {
               text: {
                 query: search,
-                path: ['name', 'description', 'theme', 'creatorUsername'],
+                path: ['name', 'theme', 'creatorUsername'],
               },
             },
           ],

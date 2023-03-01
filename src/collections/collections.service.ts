@@ -63,7 +63,8 @@ export class CollectionsService {
       .find()
       .sort({ itemsCount: -1 })
       .limit(7);
-    return collections;
+    const totalCount = collections.length;
+    return { collections, totalCount };
   }
 
   async updateCollection(updateDto: UpdateCollectionDto, id: string) {
@@ -82,13 +83,25 @@ export class CollectionsService {
     await this.collectionsModel.deleteOne({ _id: id });
   }
 
-  async itemsInCollectionChange(id: string) {
+  async itemsInCollectionPlus(id: string) {
     const collection = await this.getCollectionById(id);
     await this.collectionsModel.updateOne(
       { _id: id },
       {
         $set: {
           itemsCount: collection.itemsCount + 1,
+        },
+      },
+    );
+  }
+
+  async itemsInCollectionMinus(id: string) {
+    const collection = await this.getCollectionById(id);
+    await this.collectionsModel.updateOne(
+      { _id: id },
+      {
+        $set: {
+          itemsCount: collection.itemsCount - 1,
         },
       },
     );
