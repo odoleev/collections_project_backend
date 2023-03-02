@@ -10,6 +10,10 @@ export class Comment {
   @Prop({ required: true })
   author: string;
 
+  @ApiProperty({ example: 'name', description: 'Comment author id' })
+  @Prop({ required: true })
+  authorId: string;
+
   @ApiProperty({ example: 'text', description: 'Comment text' })
   @Prop({ required: true })
   text: string;

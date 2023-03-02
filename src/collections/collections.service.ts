@@ -37,34 +37,33 @@ export class CollectionsService {
       query,
       'createdAt',
     );
-    let collections;
-    let totalCount;
     if (search) {
-      collections = await this.collectionsModel
+      const collections = await this.collectionsModel
         .aggregate(collectionsPipeline(search, userId))
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
-      totalCount = collections.length;
+      const [totalCount] = await this.collectionsModel
+        .aggregate(collectionsPipeline(search, userId))
+        .count('totalCount');
+      return { collections, totalCount };
     } else {
-      collections = await this.collectionsModel
+      const collections = await this.collectionsModel
         .find({ creatorId: userId })
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
-      totalCount = await this.getCollectionsCount(userId);
+      const totalCount = await this.getCollectionsCount(userId);
+      return { collections, totalCount: { totalCount } };
     }
-
-    return { collections, totalCount };
   }
 
   async getCollectionsWithMostItems() {
     const collections = await this.collectionsModel
       .find()
       .sort({ itemsCount: -1 })
-      .limit(7);
-    const totalCount = collections.length;
-    return { collections, totalCount };
+      .limit(6);
+    return { collections, totalCount: { totalCount: 6 } };
   }
 
   async updateCollection(updateDto: UpdateCollectionDto, id: string) {

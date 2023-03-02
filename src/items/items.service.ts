@@ -24,24 +24,25 @@ export class ItemsService {
       query,
       'createdAt',
     );
-    let items;
-    let totalCount;
     if (search) {
-      items = await this.itemsModel
+      const items = await this.itemsModel
         .aggregate(itemsPipelineCollection(search, collectionId))
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
-      totalCount = items.length;
+      const [totalCount] = await this.itemsModel
+        .aggregate(itemsPipelineCollection(search, collectionId))
+        .count('totalCount');
+      return { items, totalCount };
     } else {
-      items = await this.itemsModel
+      const items = await this.itemsModel
         .find({ collectionId: collectionId })
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
-      totalCount = items.length;
+      const totalCount = await this.itemsModel.count();
+      return { items, totalCount: { totalCount } };
     }
-    return { items, totalCount };
   }
 
   async getFullTextSearchItems(query: Query) {
@@ -55,7 +56,10 @@ export class ItemsService {
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
-      return items;
+      const [totalCount] = await this.itemsModel
+        .aggregate(itemsPipeline(search))
+        .count('totalCount');
+      return { items, totalCount };
     }
     return [];
   }
@@ -64,15 +68,16 @@ export class ItemsService {
     const items = await this.itemsModel
       .find({})
       .sort({ createdAt: -1 })
-      .limit(5);
-    const totalCount = items.length;
-    return { items, totalCount };
+      .limit(6);
+    return { items, totalCount: { totalCount: 6 } };
   }
 
   async findItemsByTags(tags: string[]) {
     const items = await this.itemsModel.find({ tags: { $all: tags } });
-    const totalCount = items.length;
-    return { items, totalCount };
+    const totalCount = await this.itemsModel
+      .find({ tags: { $all: tags } })
+      .count();
+    return { items, totalCount: { totalCount } };
   }
 
   async createItem(dto: CreateItemDto) {

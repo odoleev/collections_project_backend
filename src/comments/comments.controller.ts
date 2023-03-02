@@ -29,7 +29,7 @@ export class CommentsController {
   @ApiOperation({ summary: 'Create comment' })
   @ApiResponse({ status: 200, type: Comment })
   @HttpCode(HttpStatus.OK)
-  async createCollection(@Body() dto: CreateCommentDto) {
+  async createComment(@Body() dto: CreateCommentDto) {
     return await this.commentsService.createComment(dto);
   }
 }

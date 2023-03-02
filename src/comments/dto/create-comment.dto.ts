@@ -9,6 +9,12 @@ export class CreateCommentDto {
   @IsString()
   readonly author: string;
 
+  @ApiProperty({ example: 'name', description: 'Comment author id' })
+  @Prop({ required: true })
+  @IsNotEmpty()
+  @IsString()
+  readonly authorId: string;
+
   @ApiProperty({ example: 'text', description: 'Comment text' })
   @Prop({ required: true })
   @IsNotEmpty()
