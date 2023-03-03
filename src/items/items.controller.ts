@@ -53,6 +53,15 @@ export class ItemsController {
     return await this.itemsService.getFullTextSearchItems(query);
   }
 
+  @Post('tags-cloud')
+  @Public()
+  @ApiOperation({ summary: 'Get items from search' })
+  @ApiResponse({ status: 200, type: [Items] })
+  @HttpCode(HttpStatus.OK)
+  async getTags() {
+    return await this.itemsService.getTags();
+  }
+
   @Post('last')
   @Public()
   @ApiOperation({ summary: 'Get last added items' })
@@ -75,8 +84,8 @@ export class ItemsController {
   @ApiOperation({ summary: 'Find item by tag' })
   @ApiResponse({ status: 200, type: [Items] })
   @HttpCode(HttpStatus.OK)
-  async findByTags(@Body() { tags }: { tags: string[] }) {
-    return await this.itemsService.findItemsByTags(tags);
+  async findByTags(@Query() query: ExpressQuery, @Body() tags: string[]) {
+    return await this.itemsService.findItemsByTags(tags, query);
   }
 
   @Post('like')

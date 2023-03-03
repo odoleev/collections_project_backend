@@ -40,7 +40,9 @@ export class ItemsService {
         .sort(sortBy)
         .limit(currentLimit)
         .skip(skip);
-      const totalCount = await this.itemsModel.count();
+      const totalCount = await this.itemsModel
+        .find({ collectionId: collectionId })
+        .count();
       return { items, totalCount: { totalCount } };
     }
   }
@@ -72,8 +74,16 @@ export class ItemsService {
     return { items, totalCount: { totalCount: 6 } };
   }
 
-  async findItemsByTags(tags: string[]) {
-    const items = await this.itemsModel.find({ tags: { $all: tags } });
+  async findItemsByTags(tags: string[], query: Query) {
+    const [search, sortBy, currentLimit, skip] = returnQuery(
+      query,
+      'createdAt',
+    );
+    const items = await this.itemsModel
+      .find({ tags: { $all: tags } })
+      .sort(sortBy)
+      .limit(currentLimit)
+      .skip(skip);
     const totalCount = await this.itemsModel
       .find({ tags: { $all: tags } })
       .count();
@@ -110,6 +120,21 @@ export class ItemsService {
     const item = await this.getItemById(id);
     await this.collectionsService.itemsInCollectionMinus(item.collectionId);
     await this.itemsModel.deleteOne({ _id: id });
+  }
+
+  async getTags() {
+    const tags = await this.itemsModel.find({}, { tags: 1, _id: 0 });
+    const allTags = [];
+    tags.map((innerTags) => {
+      innerTags.tags.map((tag) => {
+        allTags.push(tag);
+      });
+    });
+    const cloud = allTags.reduce((acc, el) => {
+      acc[el] = (acc[el] || 0) + 1;
+      return acc;
+    }, {});
+    return cloud;
   }
 
   async getItemById(id: string) {
