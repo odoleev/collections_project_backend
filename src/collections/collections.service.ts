@@ -79,6 +79,7 @@ export class CollectionsService {
   }
 
   async deleteCollection(id: string) {
+    // await this.itemsService.deleteAllItemsOfCollection(id);
     await this.collectionsModel.deleteOne({ _id: id });
   }
 

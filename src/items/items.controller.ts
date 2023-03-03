@@ -113,4 +113,12 @@ export class ItemsController {
   async deleteItem(@Param('id') id: string) {
     return await this.itemsService.deleteItem(id);
   }
+
+  @Post('delete-items')
+  @ApiOperation({ summary: 'Delete collection' })
+  @ApiResponse({ status: 200 })
+  @HttpCode(HttpStatus.OK)
+  async deleteCollectionItems(@Body() { id }: { id: string }) {
+    return await this.itemsService.deleteAllItemsOfCollection(id);
+  }
 }

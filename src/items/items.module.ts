@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { ItemsController } from './items.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -7,7 +7,7 @@ import { CollectionsModule } from '../collections/collections.module';
 
 @Module({
   imports: [
-    CollectionsModule,
+    forwardRef(() => CollectionsModule),
     MongooseModule.forFeature([{ name: Items.name, schema: ItemsSchema }]),
   ],
   providers: [ItemsService],

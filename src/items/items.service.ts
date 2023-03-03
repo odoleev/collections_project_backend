@@ -158,4 +158,8 @@ export class ItemsService {
       );
     }
   }
+
+  async deleteAllItemsOfCollection(id: string) {
+    await this.itemsModel.deleteMany({ collectionId: id });
+  }
 }
