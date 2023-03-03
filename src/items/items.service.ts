@@ -61,6 +61,9 @@ export class ItemsService {
       const [totalCount] = await this.itemsModel
         .aggregate(itemsPipeline(search))
         .count('totalCount');
+      if (items.length < 1) {
+        return { items: [], totalCount: { totalCount: 0 } };
+      }
       return { items, totalCount };
     }
     return [];
