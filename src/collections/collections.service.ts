@@ -46,6 +46,9 @@ export class CollectionsService {
       const [totalCount] = await this.collectionsModel
         .aggregate(collectionsPipeline(search, userId))
         .count('totalCount');
+      if (collections.length < 1) {
+        return { collections: [], totalCount: { totalCount: 0 } };
+      }
       return { collections, totalCount };
     } else {
       const collections = await this.collectionsModel
