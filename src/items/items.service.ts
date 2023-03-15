@@ -33,6 +33,9 @@ export class ItemsService {
       const [totalCount] = await this.itemsModel
         .aggregate(itemsPipelineCollection(search, collectionId))
         .count('totalCount');
+      if (items.length < 1) {
+        return { items: [], totalCount: { totalCount: 0 } };
+      }
       return { items, totalCount };
     } else {
       const items = await this.itemsModel
